@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eggclock</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    .background-dark {
+      background-color: #262626;
+    }
+
+    .center {
+      display: flex;
+      justify-content: center;
+    }
+
+    .margin-top {
+      margin-top: 100px;
+    }
+
+    .timer {
+      font-size: 60px;
+      color: white;
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+
+  <script>
+    let alarm = new Audio('alarm.mp3')
+
+    let timerStarted = false; // Variable, um den Timer-Startstatus zu verfolgen
+
+    function startTimer() {
+      if (!timerStarted) {
+        let startTime = new Date().getTime();
+        let fiveMinutes = 1000 * 60 * 5;
+        let endTime = startTime + fiveMinutes;
+
+        setInterval(function () {
+          let timeLeft = endTime - new Date().getTime();
+
+          if (timeLeft > 0) {
+            let minutes = Math.floor(timeLeft / (1000 * 60));
+            let seconds = Math.round((timeLeft / 1000) % 60);
+            seconds = ('0' + seconds).slice(-2);
+            let text = '0' + minutes + ' : ' + seconds;
+            document.getElementById('timer').innerHTML = text;
+          } else {
+            document.getElementById('timer').innerHTML = '00 : 00';
+            alarm.play(); // Spiele den Alarm ab, wenn der Timer abgelaufen ist
+            timerStarted = false; // Setze den Timer-Startstatus zurück
+          }
+        }, 1000);
+
+        timerStarted = true; // Setze den Timer-Startstatus auf true
+      }
+    }
+  </script>
+</head>
+<body class="background-dark">
+
+  <div>
+    <img src="img/menu.png">
+  </div>
+
+  <div class="center margin-top">
+    <img src="img/egg.png">
+  </div>
+
+  <div class="center margin-top timer" id="timer">05 : 00</div>
+
+  <div class="center margin-top timer">
+    <img onclick="startTimer()" src="img/button.png">
+  </div>
+
+</body>
+</html>
